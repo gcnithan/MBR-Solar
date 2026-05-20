@@ -120,7 +120,7 @@ function ServiceCard({ service, index, onCardMount }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="service-card relative rounded-2xl p-6 cursor-default overflow-hidden"
+      className="service-card relative rounded-2xl p-5 sm:p-6 md:p-7 cursor-default overflow-hidden"
     >
       {/* Mouse-follow glow */}
       <div
@@ -264,7 +264,7 @@ export default function Services() {
 
       {/* Radial glow center */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(100vw,600px)] h-[min(100vw,600px)] max-w-[100vw] rounded-full pointer-events-none"
         style={{
           background: 'radial-gradient(circle, rgba(153,194,77,0.05) 0%, transparent 70%)',
         }}
@@ -288,7 +288,7 @@ export default function Services() {
             What We Offer
           </span>
           <h2
-            className="text-4xl md:text-5xl font-bold mb-4"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4"
             style={{ fontFamily: 'var(--font-sans)', color: 'var(--text-primary)' }}
           >
             Our{' '}

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ChevronLeft, ChevronRight, Star } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Quote, Star } from 'lucide-react'
 import Scene3DAccent from './Scene3DAccent'
 import Card3D from './Card3D'
 
@@ -38,6 +38,12 @@ const testimonials = [
   },
 ]
 
+function initialsFromName(name) {
+  const parts = name.trim().split(/\s+/)
+  if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+  return name.slice(0, 2).toUpperCase()
+}
+
 export default function Testimonials() {
   const sectionRef = useRef()
   const trackRef = useRef()
@@ -48,9 +54,8 @@ export default function Testimonials() {
     if (!section) return
     const ctx = gsap.context(() => {
       gsap.from(section.querySelector('.testimonial-panel'), {
-        y: 32,
-        rotateX: 10,
-        duration: 0.75,
+        y: 28,
+        duration: 0.8,
         ease: 'power3.out',
         clearProps: 'transform',
         scrollTrigger: { trigger: section, start: 'top 85%', once: true },
@@ -62,7 +67,7 @@ export default function Testimonials() {
   useEffect(() => {
     const interval = setInterval(() => {
       setActive((prev) => (prev + 1) % testimonials.length)
-    }, 5000)
+    }, 6000)
     return () => clearInterval(interval)
   }, [])
 
@@ -72,91 +77,135 @@ export default function Testimonials() {
     const slideWidth = track.children[0].offsetWidth
     gsap.to(track, {
       x: -active * slideWidth,
-      duration: 0.8,
-      ease: 'power3.inOut',
+      duration: 0.65,
+      ease: 'power2.out',
     })
   }, [active])
 
-  const goTo = (index) => {
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track?.children[0]) return
+    const onResize = () => {
+      const w = track.children[0]?.offsetWidth ?? 0
+      gsap.set(track, { x: -active * w })
+    }
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [active])
+
+  const goTo = useCallback((index) => {
     setActive((index + testimonials.length) % testimonials.length)
-  }
+  }, [])
 
   return (
-    <section id="testimonials" ref={sectionRef} className="section section-transition"
-      style={{ background: '#FFFFFF' }}>
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: 'radial-gradient(circle at 70% 30%, rgba(59,130,246,0.06) 0%, transparent 50%)' }} />
-      <Scene3DAccent variant="stars" className="scene-accent--testimonials" opacity={0.42} />
-      <div className="section-inner max-w-4xl relative z-10 testimonials-section__inner">
-        <div className="section-header">
+    <section
+      id="testimonials"
+      ref={sectionRef}
+      className="section section-transition testimonials-section"
+    >
+      <div
+        className="absolute inset-0 pointer-events-none testimonials-section__bg"
+        aria-hidden="true"
+      />
+      <Scene3DAccent variant="stars" className="scene-accent--testimonials" opacity={0.35} />
+
+      <div className="section-inner testimonials-section__inner relative z-10 max-w-3xl lg:max-w-4xl">
+        <header className="section-header testimonials-section__head">
           <span className="section-badge">Client Stories</span>
           <h2 className="section-title">
-            What Our <span className="gradient-text">Clients Say</span>
+            What our <span className="gradient-text">clients say</span>
           </h2>
-        </div>
+          <p className="section-desc testimonials-section__sub">
+            Real feedback from homeowners, businesses, and communities we&apos;ve helped switch to solar across Karnataka.
+          </p>
+        </header>
 
-        <div className="testimonial-panel relative overflow-hidden rounded-3xl" style={{ perspective: '1200px' }}>
-          <div ref={trackRef} className="flex">
-            {testimonials.map((t, i) => {
-              const isActive = i === active
-              return (
-                <div key={t.name} className="min-w-full flex-shrink-0 px-2">
-                  <Card3D
-                    className={`p-8 md:p-10 rounded-3xl glass testimonial-slide ${isActive ? 'is-active' : ''}`}
-                    glowColor={`${t.color}44`}
-                    maxTilt={isActive ? 8 : 4}
-                    style={{
-                      border: `1px solid ${t.color}30`,
-                      boxShadow: isActive ? `0 20px 60px ${t.color}20` : 'none',
-                      opacity: isActive ? 1 : 0.65,
-                    }}
+        <div className="testimonial-panel">
+          <div className="testimonial-panel__viewport">
+            <div ref={trackRef} className="testimonial-panel__track flex">
+              {testimonials.map((t, i) => {
+                const isActive = i === active
+                return (
+                  <div
+                    key={t.name}
+                    className="testimonial-slide-wrap min-w-full w-full shrink-0 box-border px-0.5 sm:px-1"
                   >
-                    <div className="flex gap-1 mb-4">
-                      {Array.from({ length: t.rating }).map((_, j) => (
-                        <Star key={j} size={16} fill="#F9AD42" color="#F49021" />
-                      ))}
-                    </div>
-                    <p className="text-lg leading-relaxed mb-6 italic"
-                      style={{ fontFamily: 'var(--font-sans)', color: 'var(--text-secondary)' }}>
-                      "{t.text}"
-                    </p>
-                    <div>
-                      <p className="font-bold" style={{ fontFamily: 'var(--font-sans)', color: 'var(--text-primary)' }}>{t.name}</p>
-                      <p className="text-sm" style={{ color: t.color, fontFamily: 'var(--font-sans)' }}>{t.role}</p>
-                    </div>
-                  </Card3D>
-                </div>
-              )
-            })}
+                    <Card3D
+                      className={`testimonial-card rounded-2xl sm:rounded-3xl ${isActive ? 'testimonial-card--active' : 'testimonial-card--idle'}`}
+                      glowColor={`${t.color}33`}
+                      maxTilt={isActive ? 6 : 3}
+                      style={{ '--tc': t.color }}
+                    >
+                      <div className="testimonial-card__top">
+                        <Quote className="testimonial-card__mark" size={28} strokeWidth={1.25} aria-hidden />
+                        <div className="testimonial-card__stars" aria-label={`${t.rating} out of 5 stars`}>
+                          {Array.from({ length: t.rating }).map((_, j) => (
+                            <Star key={j} size={15} fill="#F49021" color="#E87A1A" aria-hidden />
+                          ))}
+                        </div>
+                      </div>
+
+                      <blockquote className="testimonial-card__quote">
+                        <span className="testimonial-card__quote-text">{t.text}</span>
+                      </blockquote>
+
+                      <footer className="testimonial-card__author">
+                        <div
+                          className="testimonial-card__avatar"
+                          style={{
+                            background: `linear-gradient(145deg, ${t.color}, #2E3192)`,
+                          }}
+                          aria-hidden
+                        >
+                          {initialsFromName(t.name)}
+                        </div>
+                        <div className="testimonial-card__meta min-w-0">
+                          <cite className="testimonial-card__name not-italic">{t.name}</cite>
+                          <p className="testimonial-card__role" style={{ color: t.color }}>
+                            {t.role}
+                          </p>
+                        </div>
+                      </footer>
+                    </Card3D>
+                  </div>
+                )
+              })}
+            </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-center gap-5 mt-12">
-          <button type="button" onClick={() => goTo(active - 1)} data-cursor
-            className="w-10 h-10 rounded-full glass flex items-center justify-center hover:border-emerald-500/50 transition-colors"
-            style={{ color: 'var(--text-primary)' }}
-            aria-label="Previous testimonial">
-            <ChevronLeft size={20} />
+        <nav className="testimonial-controls" aria-label="Testimonial carousel">
+          <button
+            type="button"
+            onClick={() => goTo(active - 1)}
+            data-cursor
+            className="testimonial-controls__btn"
+            aria-label="Previous testimonial"
+          >
+            <ChevronLeft size={22} strokeWidth={2} />
           </button>
-          <div className="flex gap-2">
+          <div className="testimonial-controls__dots">
             {testimonials.map((_, i) => (
-              <button key={i} type="button" onClick={() => goTo(i)}
-                className="w-2 h-2 rounded-full transition-all duration-300"
-                style={{
-                  background: i === active ? '#99C24D' : 'rgba(153,194,77,0.25)',
-                  width: i === active ? '24px' : '8px',
-                }}
-                aria-label={`Go to testimonial ${i + 1}`}
+              <button
+                key={i}
+                type="button"
+                onClick={() => goTo(i)}
+                className={`testimonial-controls__dot ${i === active ? 'is-active' : ''}`}
+                aria-label={`Show testimonial ${i + 1} of ${testimonials.length}`}
+                aria-current={i === active ? 'true' : undefined}
               />
             ))}
           </div>
-          <button type="button" onClick={() => goTo(active + 1)} data-cursor
-            className="w-10 h-10 rounded-full glass flex items-center justify-center hover:border-emerald-500/50 transition-colors"
-            style={{ color: 'var(--text-primary)' }}
-            aria-label="Next testimonial">
-            <ChevronRight size={20} />
+          <button
+            type="button"
+            onClick={() => goTo(active + 1)}
+            data-cursor
+            className="testimonial-controls__btn"
+            aria-label="Next testimonial"
+          >
+            <ChevronRight size={22} strokeWidth={2} />
           </button>
-        </div>
+        </nav>
       </div>
     </section>
   )

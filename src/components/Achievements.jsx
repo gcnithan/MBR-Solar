@@ -61,7 +61,7 @@ function glowFromHex(hex) {
 function StatCard({ stat }) {
   return (
     <Card3D
-      className="stat-card achievement-card rounded-2xl text-center p-8 md:p-10"
+      className="stat-card achievement-card rounded-2xl text-center p-5 sm:p-7 md:p-10"
       glowColor={glowFromHex(stat.color)}
       maxTilt={10}
       style={{
@@ -78,7 +78,7 @@ function StatCard({ stat }) {
       ) : (
         <CountUpValue value={stat.value} suffix={stat.suffix} color={stat.color} />
       )}
-      <p className="text-sm leading-relaxed max-w-[14rem] mx-auto" style={{ color: 'var(--text-muted)', transform: 'translateZ(8px)' }}>
+      <p className="text-sm leading-relaxed max-w-[min(14rem,100%)] mx-auto" style={{ color: 'var(--text-muted)', transform: 'translateZ(8px)' }}>
         {stat.label}
       </p>
     </Card3D>

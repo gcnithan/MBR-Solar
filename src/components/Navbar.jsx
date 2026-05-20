@@ -62,7 +62,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 w-full z-50 transition-all duration-500"
+        className="fixed top-0 left-0 right-0 z-50 w-full max-w-[100vw] transition-all duration-500"
         style={{
           background: scrolled
             ? "rgba(255,255,255,0.92)"
@@ -81,7 +81,13 @@ export default function Navbar() {
             : "0.875rem 0",
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+        <div
+          className="max-w-7xl mx-auto flex items-center justify-between gap-2 px-3 sm:px-5 md:px-6"
+          style={{
+            paddingLeft: "max(0.75rem, env(safe-area-inset-left, 0px))",
+            paddingRight: "max(0.75rem, env(safe-area-inset-right, 0px))",
+          }}
+        >
 
           {/* Logo */}
           <a
@@ -90,9 +96,9 @@ export default function Navbar() {
               e.preventDefault();
               handleNavClick("#home");
             }}
-            className="flex items-center gap-3 group"
+            className="flex min-w-0 items-center gap-2 sm:gap-3 group"
           >
-            <div className="relative shrink-0 w-10 h-10 overflow-hidden flex items-center justify-center">
+            <div className="relative shrink-0 w-9 h-9 sm:w-10 sm:h-10 overflow-hidden flex items-center justify-center">
               <img
                 src={logo}
                 alt="MBR Solar Logo"
@@ -106,11 +112,11 @@ export default function Navbar() {
               />
             </div>
 
-            <div>
-              <span className="brand-lockup__mbr brand-lockup__mbr--nav block">
+            <div className="min-w-0 leading-tight">
+              <span className="brand-lockup__mbr brand-lockup__mbr--nav block truncate">
                 MBR
               </span>
-              <span className="brand-lockup__sub brand-lockup__sub--nav block">
+              <span className="brand-lockup__sub brand-lockup__sub--nav block truncate">
                 Solar Solutions
               </span>
             </div>
@@ -162,46 +168,20 @@ export default function Navbar() {
             )}
           </ul>
 
-          <div className="flex items-center gap-4">
-
-            {/* Desktop CTA */}
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick(
-                  "#contact"
-                );
-              }}
-              className="hidden md:block px-5 py-2 rounded-full text-white font-semibold transition-all"
-              style={{
-                background:
-                  "linear-gradient(135deg,var(--brand-green),var(--brand-green-dark))",
-
-                boxShadow:
-                  "0 0 16px rgba(153,194,77,.25)",
-              }}
-            >
-              Free Consultation
-            </a>
-
-            {/* Mobile button */}
-            <button
-              className="md:hidden"
-              style={{ color: 'var(--text-primary)' }}
-              onClick={() =>
-                setMenuOpen(
-                  !menuOpen
-                )
-              }
-            >
-              {menuOpen ? (
-                <X size={24} />
-              ) : (
-                <Menu size={24} />
-              )}
-            </button>
-          </div>
+          <button
+            type="button"
+            className="md:hidden flex items-center justify-center p-1"
+            style={{ color: 'var(--text-primary)' }}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            {menuOpen ? (
+              <X size={24} />
+            ) : (
+              <Menu size={24} />
+            )}
+          </button>
         </div>
       </nav>
 
@@ -224,9 +204,14 @@ export default function Navbar() {
             menuOpen
               ? "all"
               : "none",
+
+          paddingTop: "max(2rem, env(safe-area-inset-top))",
+          paddingBottom: "max(2rem, env(safe-area-inset-bottom))",
+          paddingLeft: "max(1rem, env(safe-area-inset-left))",
+          paddingRight: "max(1rem, env(safe-area-inset-right))",
         }}
       >
-        <ul className="flex flex-col gap-8 items-center">
+        <ul className="flex flex-col gap-6 sm:gap-8 items-center px-4 w-full max-w-md">
           {navLinks.map(
             (
               { label, href },
@@ -256,10 +241,10 @@ export default function Navbar() {
                       href
                     )
                   }
-                  className="text-3xl font-bold"
+                  className="text-2xl sm:text-3xl font-bold max-w-full"
                   style={{
                     fontFamily: 'var(--font-sans)',
-                    color: 'var(--text-primary)',
+                    color: '#f8fafc',
                   }}
                 >
                   {label}
@@ -268,27 +253,6 @@ export default function Navbar() {
             )
           )}
         </ul>
-
-        <a
-          href="#contact"
-          onClick={(e) => {
-            e.preventDefault();
-
-            handleNavClick(
-              "#contact"
-            );
-          }}
-          className="mt-12 px-8 py-3 rounded-full text-white font-semibold"
-          style={{
-            background:
-              "linear-gradient(135deg,#99C24D,#7DA83A)",
-
-            boxShadow:
-              "0 0 30px rgba(153,194,77,.4)",
-          }}
-        >
-          Free Consultation
-        </a>
       </div>
     </>
   );

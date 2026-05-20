@@ -143,7 +143,7 @@ export default function About() {
       <Scene3DAccent variant="solar" className="scene-accent--about" opacity={0.38} />
 
       <div className="section-inner relative z-10 about-section__inner">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-16 items-center min-w-0">
             <div ref={leftRef}>
               <span className="section-badge">About Us</span>
               <h2 className="section-title text-left mx-0 mb-5" style={{ maxWidth: 'none' }}>
@@ -186,7 +186,7 @@ export default function About() {
               </div>
             </div>
 
-            <div ref={rightRef} className="about-visual-panel-wrap">
+            <div ref={rightRef} className="about-visual-panel-wrap min-w-0 w-full">
             <Card3D
               className="about-visual-panel"
               maxTilt={6}

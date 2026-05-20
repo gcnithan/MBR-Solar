@@ -27,7 +27,10 @@ function App() {
   useGlobalSection3D()
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden app-3d-root" style={{ background: 'var(--bg-page)' }}>
+    <div
+      className="relative min-h-screen w-full min-w-0 overflow-x-hidden app-3d-root"
+      style={{ background: 'var(--bg-page)' }}
+    >
       <CustomCursor />
       <ScrollProgress />
       <SectionSpotlight activeIndex={activeSection} />

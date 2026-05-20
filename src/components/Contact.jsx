@@ -253,7 +253,7 @@ export default function Contact() {
                     <div className="min-w-0 flex-1">
                       <div className="contact-info-card__label">{label}</div>
                       {href ? (
-                        <span className="contact-info-card__value block truncate">{value}</span>
+                        <span className="contact-info-card__value block contact-info-card__value--clip">{value}</span>
                       ) : (
                         <span className="contact-info-card__value block">{value}</span>
                       )}
@@ -261,16 +261,23 @@ export default function Contact() {
                   </>
                 )
 
+                const isWide = label === 'Location'
+
                 if (href) {
                   return (
-                    <a key={label} href={href} className="contact-info-card" data-cursor>
+                    <a
+                      key={label}
+                      href={href}
+                      className={`contact-info-card${isWide ? ' contact-info-card--wide' : ''}`}
+                      data-cursor
+                    >
                       {inner}
                     </a>
                   )
                 }
 
                 return (
-                  <div key={label} className="contact-info-card">
+                  <div key={label} className={`contact-info-card${isWide ? ' contact-info-card--wide' : ''}`}>
                     {inner}
                   </div>
                 )

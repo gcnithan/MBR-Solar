@@ -74,7 +74,7 @@ export default function WhyChooseUs() {
           {features.map((f) => (
             <Card3D
               key={f.title}
-              className="feature-card rounded-2xl"
+              className="feature-card rounded-2xl p-5 sm:p-6"
               glowColor={glowFromHex(f.color)}
               style={{ borderTop: `3px solid ${f.color}` }}
             >

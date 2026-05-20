@@ -74,7 +74,7 @@ export default function Hero() {
         <Canvas
           shadows
           camera={{ position: [0, 2.5, 11], fov: 48 }}
-          dpr={[1, 1.75]}
+          dpr={[1, 1.5]}
           gl={{ ...defaultGlProps, alpha: false }}
           onCreated={({ gl }) => configureRenderer(gl, { shadows: true })}
         >
